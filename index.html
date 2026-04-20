@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Pet Rent Calculator</title>
+  <style>
+    :root {
+      --primary: #5b3ea6;
+      --primary-light: #ede9fa;
+      --accent: #f5c842;
+      --bg: #f8f6ff;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 80px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    header p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      padding: 32px;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-family: sans-serif;
+    }
+
+    /* Pet picker */
+    .pet-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .pet-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 4px 8px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: sans-serif;
+    }
+
+    .pet-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .pet-btn.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(91,62,166,0.15);
+    }
+
+    .pet-btn .emoji {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .pet-btn .name {
+      font-size: 0.62rem;
+      margin-top: 5px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Inputs */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 1.05rem;
+      font-family: sans-serif;
+      color: var(--text);
+      background: white;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input[type="number"]:focus {
+      border-color: var(--primary);
+    }
+
+    .prefix {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--primary);
+      padding: 0 2px;
+    }
+
+    .suffix {
+      font-size: 1rem;
+      color: var(--muted);
+      font-family: sans-serif;
+      white-space: nowrap;
+    }
+
+    .unit-toggle {
+      display: flex;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .unit-toggle button {
+      padding: 11px 14px;
+      border: none;
+      background: white;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: sans-serif;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+
+    .unit-toggle button.active {
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Calculate button */
+    .calc-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-family: sans-serif;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .calc-btn:hover { background: #42298a; }
+    .calc-btn:active { transform: scale(0.98); }
+
+    /* Results */
+    #results {
+      margin-top: 28px;
+      display: none;
+    }
+
+    .result-hero {
+      background: var(--primary);
+      color: white;
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .result-hero .big-price {
+      font-size: 3.5rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .result-hero .per-label {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-top: 4px;
+      font-family: sans-serif;
+    }
+
+    .result-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .meta-chip {
+      background: var(--primary-light);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      font-family: sans-serif;
+    }
+
+    .meta-chip .val {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .meta-chip .lbl {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .verdict {
+      margin-top: 16px;
+      background: #fffbe6;
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .verdict .badge {
+      display: inline-block;
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🐾 The Pet Rent Calculator</h1>
+  <p>What your pet's domination of your home actually costs</p>
+</header>
+
+<div class="card">
+
+  <div class="section-label">1. Pick your pet</div>
+  <div class="pet-grid" id="petGrid"></div>
+
+  <div class="section-label">2. Number of pets</div>
+  <div class="input-group">
+    <div class="input-row">
+      <input type="number" id="numPets" placeholder="1" min="1" max="99" />
+      <span class="suffix" id="petSuffix">cats</span>
+    </div>
+  </div>
+
+  <div class="section-label">3. Apartment size</div>
+  <div class="input-group">
+    <div class="input-row">
+      <input type="number" id="aptSize" placeholder="800" min="1" />
+      <div class="unit-toggle">
+        <button id="btnSqft" class="active" onclick="setAreaUnit('sqft')">sq ft</button>
+        <button id="btnSqm" onclick="setAreaUnit('sqm')">sq m</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">4. % of apartment your pet dominates</div>
+  <div class="input-group">
+    <div class="input-row">
+      <input type="number" id="dominance" placeholder="30" min="1" max="100" />
+      <span class="suffix">%</span>
+    </div>
+  </div>
+
+  <div class="section-label">5. Your monthly rent or mortgage</div>
+  <div class="input-group">
+    <div class="input-row">
+      <span class="prefix" id="currencySymbol">$</span>
+      <input type="number" id="rent" placeholder="2,000" min="1" />
+      <div class="unit-toggle">
+        <button id="btnUSD" class="active" onclick="setCurrency('USD')">USD</button>
+        <button id="btnEUR" onclick="setCurrency('EUR')">EUR</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="calc-btn" id="calcBtn" onclick="calculate()">Calculate Pet Rent 🐾</button>
+
+  <div id="results">
+    <div class="result-hero">
+      <div class="big-price" id="monthlyPetRent">—</div>
+      <div class="per-label" id="heroLabel">per month in pet rent</div>
+    </div>
+    <div class="result-meta">
+      <div class="meta-chip">
+        <div class="val" id="annualCost">—</div>
+        <div class="lbl">Annual pet rent</div>
+      </div>
+      <div class="meta-chip">
+        <div class="val" id="costPerPet">—</div>
+        <div class="lbl">Per pet / month</div>
+      </div>
+      <div class="meta-chip">
+        <div class="val" id="petArea">—</div>
+        <div class="lbl" id="petAreaLabel">Sq ft dominated</div>
+      </div>
+      <div class="meta-chip">
+        <div class="val" id="petShare">—</div>
+        <div class="lbl">Of your home</div>
+      </div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+
+</div>
+
+<footer>
+  Pet dominance estimates are based on the lived experience of pet owners everywhere.<br>
+  Your mileage (and carpet damage) may vary.
+</footer>
+
+<script>
+  const PETS = [
+    { id: 'large-dog',  emoji: '🐕', name: 'Big Dog',  dominance: 45, unit: 'dog'    },
+    { id: 'small-dog',  emoji: '🐩', name: 'Sm. Dog',  dominance: 25, unit: 'dog'    },
+    { id: 'cat',        emoji: '🐈', name: 'Cat',      dominance: 30, unit: 'cat'    },
+    { id: 'rabbit',     emoji: '🐇', name: 'Rabbit',   dominance: 20, unit: 'rabbit' },
+    { id: 'hamster',    emoji: '🐹', name: 'Hamster',  dominance:  5, unit: 'hamster'},
+    { id: 'bird',       emoji: '🐦', name: 'Bird',     dominance:  8, unit: 'bird'   },
+    { id: 'fish',       emoji: '🐠', name: 'Fish',     dominance:  3, unit: 'fish'   },
+    { id: 'snake',      emoji: '🐍', name: 'Snake',    dominance: 10, unit: 'snake'  },
+    { id: 'parrot',     emoji: '🦜', name: 'Parrot',   dominance: 20, unit: 'parrot' },
+    { id: 'turtle',     emoji: '🐢', name: 'Turtle',   dominance:  5, unit: 'turtle' },
+  ];
+
+  const VERDICTS = [
+    { max: 50,       badge: '🏆', text: (p,m,n) => `Practically free! At <strong>${m}/mo</strong>, your ${p.unit}${n>1?'s':''} barely register on the rent ledger. They contribute more in emotional support than they cost in square footage.` },
+    { max: 150,      badge: '😌', text: (p,m,n) => `A fair deal. <strong>${m}/mo</strong> for a loyal companion is practically a steal. Your ${p.unit}${n>1?'s':''} would pay up if they had opposable thumbs. Probably.` },
+    { max: 300,      badge: '🤔', text: (p,m,n) => `Getting real. At <strong>${m}/mo</strong>, your landlord would be horrified. Good thing they don't know how much real estate your ${p.unit}${n>1?'s':''} actually command.` },
+    { max: 500,      badge: '😬', text: (p,m,n) => `Yikes. Your ${p.unit}${n>1?'s':''} owe you <strong>${m} every single month</strong> in pet rent. Have you considered a formal lease agreement? Kibble as currency?` },
+    { max: Infinity, badge: '💸', text: (p,m,n) => `Your ${p.unit}${n>1?'s':''} own you. At <strong>${m}/mo</strong>, they are your landlord, your dependent, and your most expensive roommate. They pay nothing. They feel nothing. They are living their best life.` },
+  ];
+
+  let selectedPet = PETS[2]; // default: cat
+  let currency = 'USD';
+  let areaUnit = 'sqft';
+  const SYMBOLS = { USD: '$', EUR: '€' };
+
+  function setCurrency(c) {
+    currency = c;
+    document.getElementById('currencySymbol').textContent = SYMBOLS[c];
+    document.getElementById('btnUSD').classList.toggle('active', c === 'USD');
+    document.getElementById('btnEUR').classList.toggle('active', c === 'EUR');
+    if (document.getElementById('results').style.display !== 'none') updateResults();
+  }
+
+  function setAreaUnit(u) {
+    areaUnit = u;
+    document.getElementById('btnSqft').classList.toggle('active', u === 'sqft');
+    document.getElementById('btnSqm').classList.toggle('active', u === 'sqm');
+    document.getElementById('petAreaLabel').textContent = u === 'sqft' ? 'Sq ft dominated' : 'Sq m dominated';
+    if (document.getElementById('results').style.display !== 'none') updateResults();
+  }
+
+  // Build pet grid
+  const grid = document.getElementById('petGrid');
+  PETS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'pet-btn' + (p.id === selectedPet.id ? ' active' : '');
+    btn.innerHTML = `<span class="emoji">${p.emoji}</span><span class="name">${p.name}</span>`;
+    btn.onclick = () => selectPet(p, btn);
+    grid.appendChild(btn);
+  });
+
+  // Pre-fill dominance on load
+  document.getElementById('dominance').value = selectedPet.dominance;
+  document.getElementById('petSuffix').textContent = selectedPet.unit + 's';
+
+  function selectPet(p, btn) {
+    selectedPet = p;
+    document.querySelectorAll('.pet-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('dominance').value = p.dominance;
+    document.getElementById('petSuffix').textContent = p.unit + 's';
+    document.getElementById('calcBtn').textContent = `Calculate Pet Rent ${p.emoji}`;
+    if (document.getElementById('results').style.display !== 'none') updateResults();
+  }
+
+  function fmt(n) {
+    const s = SYMBOLS[currency];
+    if (n >= 10000) return s + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    if (n >= 1000)  return s + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    return s + n.toFixed(0);
+  }
+
+  function updateResults() {
+    const numPets   = parseFloat(document.getElementById('numPets').value) || 1;
+    const aptSize   = parseFloat(document.getElementById('aptSize').value);
+    const dominance = parseFloat(document.getElementById('dominance').value);
+    const rent      = parseFloat(document.getElementById('rent').value);
+
+    if (!aptSize || !dominance || !rent) return;
+
+    const pct = Math.min(dominance, 100) / 100;
+    const monthlyPetRent = rent * pct;
+    const annualCost     = monthlyPetRent * 12;
+    const costPerPet     = monthlyPetRent / numPets;
+    const petArea        = aptSize * pct;
+
+    document.getElementById('monthlyPetRent').textContent = fmt(monthlyPetRent);
+    document.getElementById('annualCost').textContent     = fmt(annualCost);
+    document.getElementById('costPerPet').textContent     = fmt(costPerPet);
+    document.getElementById('petArea').textContent        = Math.round(petArea).toLocaleString();
+    document.getElementById('petShare').textContent       = Math.round(dominance) + '%';
+
+    const p = selectedPet;
+    const n = numPets;
+    const verdict = VERDICTS.find(v => monthlyPetRent < v.max);
+    document.getElementById('verdict').innerHTML =
+      `<div class="badge">${verdict.badge}</div><br>${verdict.text(p, fmt(monthlyPetRent), n)}`;
+  }
+
+  function calculate() {
+    const numPets   = parseFloat(document.getElementById('numPets').value);
+    const aptSize   = parseFloat(document.getElementById('aptSize').value);
+    const dominance = parseFloat(document.getElementById('dominance').value);
+    const rent      = parseFloat(document.getElementById('rent').value);
+
+    if (!numPets || !aptSize || !dominance || !rent) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    const n = numPets;
+    const p = selectedPet;
+    document.getElementById('heroLabel').textContent =
+      `per month in pet rent (${n} ${p.unit}${n > 1 ? 's' : ''})`;
+    document.getElementById('petAreaLabel').textContent =
+      areaUnit === 'sqft' ? 'Sq ft dominated' : 'Sq m dominated';
+
+    const results = document.getElementById('results');
+    results.style.display = 'block';
+    updateResults();
+    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Live update when inputs change after first calculation
+  ['numPets', 'aptSize', 'dominance', 'rent'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      if (document.getElementById('results').style.display !== 'none') updateResults();
+    });
+  });
+</script>
+</body>
+</html>
