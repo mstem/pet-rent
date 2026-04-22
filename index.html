@@ -300,7 +300,7 @@
   <div class="section-label">3. Apartment size</div>
   <div class="input-group">
     <div class="input-row">
-      <input type="number" id="aptSize" placeholder="800" min="1" />
+      <input type="number" id="aptSize" min="1" />
       <div class="unit-toggle">
         <button id="btnSqft" class="active" onclick="setAreaUnit('sqft')">sq ft</button>
         <button id="btnSqm" onclick="setAreaUnit('sqm')">sq m</button>
@@ -320,7 +320,7 @@
   <div class="input-group">
     <div class="input-row">
       <span class="prefix" id="currencySymbol">$</span>
-      <input type="number" id="rent" placeholder="2,000" min="1" />
+      <input type="number" id="rent" min="1" />
       <div class="unit-toggle">
         <button id="btnUSD" class="active" onclick="setCurrency('USD')">USD</button>
         <button id="btnEUR" onclick="setCurrency('EUR')">EUR</button>
@@ -416,8 +416,11 @@
     grid.appendChild(btn);
   });
 
-  // Pre-fill dominance on load
+  // Pre-fill defaults on load
+  document.getElementById('numPets').value = 1;
+  document.getElementById('aptSize').value = 800;
   document.getElementById('dominance').value = selectedPet.dominance;
+  document.getElementById('rent').value = 2000;
   document.getElementById('petSuffix').textContent = selectedPet.unit + 's';
 
   function selectPet(p, btn) {
