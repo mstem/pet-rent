@@ -769,7 +769,7 @@
     document.getElementById('petShare').textContent       = Math.round(dominance) + '%';
 
     if (isCatMode()) {
-      renderCatResults(rent, numPets);
+      renderCatResults(rent, Math.max(1, intVal('numPets', 1)));
       return;
     }
 
