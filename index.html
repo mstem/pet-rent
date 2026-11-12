@@ -551,18 +551,20 @@
     { id: 'rabbit',     emoji: '🐇', name: 'Rabbit',   dominance: 20, unit: 'rabbit' },
     { id: 'hamster',    emoji: '🐹', name: 'Hamster',  dominance:  5, unit: 'hamster'},
     { id: 'bird',       emoji: '🐦', name: 'Bird',     dominance:  8, unit: 'bird'   },
-    { id: 'fish',       emoji: '🐠', name: 'Fish',     dominance:  3, unit: 'fish'   },
+    { id: 'fish',       emoji: '🐠', name: 'Fish',     dominance:  3, unit: 'fish', plural: 'fish' },
     { id: 'snake',      emoji: '🐍', name: 'Snake',    dominance: 10, unit: 'snake'  },
     { id: 'parrot',     emoji: '🦜', name: 'Parrot',   dominance: 20, unit: 'parrot' },
     { id: 'turtle',     emoji: '🐢', name: 'Turtle',   dominance:  5, unit: 'turtle' },
   ];
 
+  function petWord(p, n) { return n > 1 ? (p.plural || p.unit + 's') : p.unit; }
+
   const VERDICTS = [
-    { max: 50,       badge: '🏆', text: (p,m,n) => `Practically free! At <strong>${m}/mo</strong>, your ${p.unit}${n>1?'s':''} barely register on the rent ledger. They contribute more in emotional support than they cost in square footage.` },
-    { max: 150,      badge: '😌', text: (p,m,n) => `A fair deal. <strong>${m}/mo</strong> for a loyal companion is practically a steal. Your ${p.unit}${n>1?'s':''} would pay up if they had opposable thumbs. Probably.` },
-    { max: 300,      badge: '🤔', text: (p,m,n) => `Getting real. At <strong>${m}/mo</strong>, your landlord would be horrified. Good thing they don't know how much real estate your ${p.unit}${n>1?'s':''} actually command.` },
-    { max: 500,      badge: '😬', text: (p,m,n) => `Yikes. Your ${p.unit}${n>1?'s':''} owe you <strong>${m} every single month</strong> in pet rent. Have you considered a formal lease agreement? Kibble as currency?` },
-    { max: Infinity, badge: '💸', text: (p,m,n) => `Your ${p.unit}${n>1?'s':''} own you. At <strong>${m}/mo</strong>, they are your landlord, your dependent, and your most expensive roommate. They pay nothing. They feel nothing. They are living their best life.` },
+    { max: 50,       badge: '🏆', text: (p,m,n) => `Practically free! At <strong>${m}/mo</strong>, your ${petWord(p, n)} barely register on the rent ledger. They contribute more in emotional support than they cost in square footage.` },
+    { max: 150,      badge: '😌', text: (p,m,n) => `A fair deal. <strong>${m}/mo</strong> for a loyal companion is practically a steal. Your ${petWord(p, n)} would pay up if they had opposable thumbs. Probably.` },
+    { max: 300,      badge: '🤔', text: (p,m,n) => `Getting real. At <strong>${m}/mo</strong>, your landlord would be horrified. Good thing they don't know how much real estate your ${petWord(p, n)} actually command.` },
+    { max: 500,      badge: '😬', text: (p,m,n) => `Yikes. Your ${petWord(p, n)} owe you <strong>${m} every single month</strong> in pet rent. Have you considered a formal lease agreement? Kibble as currency?` },
+    { max: Infinity, badge: '💸', text: (p,m,n) => `Your ${petWord(p, n)} own you. At <strong>${m}/mo</strong>, they are your landlord, your dependent, and your most expensive roommate. They pay nothing. They feel nothing. They are living their best life.` },
   ];
 
   // Cat mode: rent share starts at cats ÷ (humans + cats), and each answer moves it.
@@ -725,7 +727,7 @@
   document.getElementById('aptSize').value = 800;
   document.getElementById('dominance').value = selectedPet.dominance;
   document.getElementById('rent').value = 2000;
-  document.getElementById('petSuffix').textContent = selectedPet.unit + 's';
+  document.getElementById('petSuffix').textContent = petWord(selectedPet, 2);
   applyMode();
 
   document.querySelectorAll('#q-bed button').forEach(b => {
@@ -747,7 +749,7 @@
     document.querySelectorAll('.pet-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('dominance').value = p.dominance;
-    document.getElementById('petSuffix').textContent = p.unit + 's';
+    document.getElementById('petSuffix').textContent = petWord(p, 2);
     document.getElementById('calcBtn').textContent = `Calculate Pet Rent ${p.emoji}`;
     applyMode();
     if (document.getElementById('results').style.display !== 'none') updateResults();
@@ -770,7 +772,7 @@
     if (!aptSize || !dominance || !rent) return;
 
     document.getElementById('heroLabel').textContent =
-      `per month in pet rent (${numPets} ${selectedPet.unit}${numPets > 1 ? 's' : ''})`;
+      `per month in pet rent (${numPets} ${petWord(selectedPet, numPets)})`;
 
     const pct = Math.min(dominance, 100) / 100;
     let monthlyPetRent = rent * pct;
@@ -823,7 +825,7 @@
     const n = numPets;
     const p = selectedPet;
     document.getElementById('heroLabel').textContent =
-      `per month in pet rent (${n} ${p.unit}${n > 1 ? 's' : ''})`;
+      `per month in pet rent (${n} ${petWord(p, n)})`;
     document.getElementById('petAreaLabel').textContent =
       areaUnit === 'sqft' ? 'Sq ft dominated' : 'Sq m dominated';
 
