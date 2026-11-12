@@ -269,6 +269,94 @@
       margin-bottom: 6px;
     }
 
+    /* Cat mode */
+    #catQuiz { display: none; margin-bottom: 20px; font-family: sans-serif; }
+
+    .quiz-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+    }
+
+    .quiz-row:last-child { border-bottom: none; }
+
+    .quiz-row label { cursor: pointer; flex: 1; }
+
+    .quiz-row input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .quiz-row input[type="number"] {
+      flex: 0 0 76px;
+      padding: 8px 10px;
+      font-size: 0.95rem;
+    }
+
+    .quiz-row .unit-toggle button { padding: 8px 10px; font-size: 0.8rem; white-space: nowrap; }
+    .quiz-row.wrap { flex-wrap: wrap; }
+
+    .lease-status {
+      margin-top: 16px;
+      text-align: center;
+      font-family: sans-serif;
+    }
+
+    .lease-status .lbl {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+
+    .lease-status .tier {
+      font-family: Georgia, serif;
+      font-size: 1.6rem;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    .lease-status .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .breakdown {
+      margin-top: 16px;
+      width: 100%;
+      border-collapse: collapse;
+      font-family: sans-serif;
+      font-size: 0.88rem;
+    }
+
+    .breakdown caption {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding-bottom: 6px;
+    }
+
+    .breakdown td {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+
+    .breakdown .why { color: var(--muted); font-size: 0.8rem; display: block; margin-top: 2px; }
+    .breakdown td.num { text-align: right; white-space: nowrap; padding-left: 12px; }
+    .breakdown tr.credit td.num { color: #2f7d4f; }
+    .breakdown tr.total td { font-weight: bold; border-bottom: none; padding-top: 10px; }
+
     footer {
       margin-top: 40px;
       font-size: 0.78rem;
@@ -309,11 +397,89 @@
     </div>
   </div>
 
-  <div class="section-label">4. % of apartment your pet dominates</div>
-  <div class="input-group">
+  <div class="section-label" id="step4Label">4. % of apartment your pet dominates</div>
+  <div class="input-group" id="dominanceGroup">
     <div class="input-row">
       <input type="number" id="dominance" placeholder="30" min="1" max="100" />
       <span class="suffix">%</span>
+    </div>
+  </div>
+
+  <div id="fishQuiz" style="display:none; margin-bottom:20px; font-family:sans-serif;">
+    <div class="quiz-row">
+      <label for="q-fishdays">How many days could it survive without you, do you think?</label>
+      <input type="number" id="q-fishdays" min="0" max="999" value="3" />
+    </div>
+  </div>
+
+  <div id="catQuiz">
+    <div class="quiz-row">
+      <label for="q-humans">Humans living with them</label>
+      <input type="number" id="q-humans" min="1" max="99" value="1" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-orange">Orange</label>
+      <input type="checkbox" id="q-orange" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-black">Black</label>
+      <input type="checkbox" id="q-black" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-longhair">Long hair</label>
+      <input type="checkbox" id="q-longhair" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-senior">Senior (10+)</label>
+      <input type="checkbox" id="q-senior" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-wetfood">Eats wet food</label>
+      <input type="checkbox" id="q-wetfood" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-litter">Litter boxes</label>
+      <input type="number" id="q-litter" min="0" max="99" value="1" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-tree">Large cat tree</label>
+      <input type="checkbox" id="q-tree" />
+    </div>
+    <div class="quiz-row wrap">
+      <span>Your bed</span>
+      <div class="unit-toggle" id="q-bed">
+        <button type="button" data-val="none" class="active">Stays off</button>
+        <button type="button" data-val="on">On it</button>
+        <button type="button" data-val="under">Under covers</button>
+      </div>
+    </div>
+    <div class="quiz-row">
+      <label for="q-couch">Has a couch spot you're not allowed in</label>
+      <input type="checkbox" id="q-couch" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-laptop">Sits on your laptop while you work</label>
+      <input type="checkbox" id="q-laptop" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-zoomies">3am zoomies</label>
+      <input type="checkbox" id="q-zoomies" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-counters">Knocks things off counters</label>
+      <input type="checkbox" id="q-counters" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-boxes">Cardboard boxes currently occupied</label>
+      <input type="number" id="q-boxes" min="0" max="99" value="0" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-outdoor">Indoor/outdoor</label>
+      <input type="checkbox" id="q-outdoor" />
+    </div>
+    <div class="quiz-row">
+      <label for="q-mousing">Catches mice or bugs</label>
+      <input type="checkbox" id="q-mousing" />
     </div>
   </div>
 
@@ -354,7 +520,20 @@
         <div class="lbl">Of your home</div>
       </div>
     </div>
+    <div class="lease-status" id="fishNote" hidden>
+      <div class="lbl">Self-sufficiency discount</div>
+      <div class="note" id="fishNoteText"></div>
+    </div>
     <div class="verdict" id="verdict"></div>
+    <div class="lease-status" id="leaseStatus" hidden>
+      <div class="lbl">Lease status</div>
+      <div class="tier" id="leaseTier"></div>
+      <div class="note" id="leaseNote"></div>
+    </div>
+    <table class="breakdown" id="breakdown" hidden>
+      <caption>Itemized charges</caption>
+      <tbody id="breakdownBody"></tbody>
+    </table>
   </div>
 
 </div>
@@ -385,6 +564,130 @@
     { max: 500,      badge: '😬', text: (p,m,n) => `Yikes. Your ${p.unit}${n>1?'s':''} owe you <strong>${m} every single month</strong> in pet rent. Have you considered a formal lease agreement? Kibble as currency?` },
     { max: Infinity, badge: '💸', text: (p,m,n) => `Your ${p.unit}${n>1?'s':''} own you. At <strong>${m}/mo</strong>, they are your landlord, your dependent, and your most expensive roommate. They pay nothing. They feel nothing. They are living their best life.` },
   ];
+
+  // Cat mode: rent share starts at cats ÷ (humans + cats), and each answer moves it.
+  const CAT_FLAGS = [
+    { id: 'q-orange',   label: 'Orange cat',          pct:  8, why: 'Claims everything, one brain cell or not' },
+    { id: 'q-black',    label: 'Black cat',           pct: -2, why: 'Blends in, takes up less visual space' },
+    { id: 'q-longhair', label: 'Long hair',           pct:  5, why: 'Fur occupies every surface' },
+    { id: 'q-senior',   label: 'Senior cat',          pct: -3, why: 'Loyalty discount' },
+    { id: 'q-wetfood',  label: 'Wet food',            pct:  3, why: 'Premium dining' },
+    { id: 'q-tree',     label: 'Large cat tree',      pct:  4, why: 'Vertical square footage' },
+    { id: 'q-couch',    label: 'Reserved couch spot', pct:  5, why: 'You are not allowed in it' },
+    { id: 'q-laptop',   label: 'Laptop occupancy',    pct:  4, why: 'Co-working membership' },
+    { id: 'q-zoomies',  label: '3am zoomies',         pct:  3, why: 'Exclusive use of hallways at night' },
+    { id: 'q-counters', label: 'Counter clearing',    pct:  2, why: 'Asserting ownership' },
+    { id: 'q-outdoor',  label: 'Indoor/outdoor',      pct: -4, why: 'Has a second residence' },
+    { id: 'q-mousing',  label: 'Mouse and bug patrol', pct: -5, why: 'Pest control discount' },
+  ];
+
+  const BED_CHARGES = {
+    none:  null,
+    on:    { label: 'Sleeps on your bed', pct:  6, why: 'Shared bedroom' },
+    under: { label: 'Sleeps under the covers', pct: 10, why: 'Primary bedroom, primary occupant' },
+  };
+
+  const LEASE_TIERS = [
+    { max: 40,       tier: 'Respectful Tenant', note: 'Pays nothing, but mostly stays in their lane.' },
+    { max: 65,       tier: 'Co-Owner',          note: "Their name isn't on the deed. They act like it is." },
+    { max: Infinity, tier: 'Landlord',          note: 'You live here at their discretion.' },
+  ];
+
+  let bedAnswer = 'none';
+
+  function intVal(id, fallback) {
+    const v = parseInt(document.getElementById(id).value, 10);
+    return Number.isFinite(v) && v >= 0 ? v : fallback;
+  }
+
+  function catCharges(numCats) {
+    const humans = Math.max(1, intVal('q-humans', 1));
+    const lines = [];
+    const baseline = numCats / (humans + numCats) * 100;
+    lines.push({
+      label: 'Baseline share',
+      why: `${numCats} cat${numCats > 1 ? 's' : ''} ÷ ${humans + numCats} residents`,
+      pct: baseline,
+      base: true,
+    });
+
+    CAT_FLAGS.forEach(f => {
+      if (document.getElementById(f.id).checked) lines.push(f);
+    });
+
+    const litter = intVal('q-litter', 0);
+    if (litter > 0) lines.push({ label: `Litter box${litter > 1 ? 'es' : ''} × ${litter}`, why: 'Dedicated real estate', pct: 2 * litter });
+
+    if (BED_CHARGES[bedAnswer]) lines.push(BED_CHARGES[bedAnswer]);
+
+    const boxes = intVal('q-boxes', 0);
+    if (boxes > 0) lines.push({ label: `Cardboard box${boxes > 1 ? 'es' : ''} × ${boxes}`, why: 'Occupied at time of assessment', pct: boxes });
+
+    const raw = lines.reduce((sum, l) => sum + l.pct, 0);
+    const total = Math.min(100, Math.max(1, raw));
+    if (total !== raw) {
+      lines.push({
+        label: 'Adjustment',
+        why: raw > 100 ? 'They cannot control more than the whole apartment. Yet.' : 'Every cat controls at least a little',
+        pct: total - raw,
+      });
+    }
+    return { lines, total };
+  }
+
+  function isCatMode() { return selectedPet.id === 'cat'; }
+
+  function syncCatDominance() {
+    const numCats = Math.max(1, intVal('numPets', 1));
+    const { total } = catCharges(numCats);
+    document.getElementById('dominance').value = total;
+  }
+
+  function applyMode() {
+    const cat = isCatMode();
+    document.getElementById('catQuiz').style.display = cat ? 'block' : 'none';
+    document.getElementById('fishQuiz').style.display = selectedPet.id === 'fish' ? 'block' : 'none';
+    document.getElementById('fishNote').hidden = selectedPet.id !== 'fish';
+    document.getElementById('dominanceGroup').style.display = cat ? 'none' : 'block';
+    document.getElementById('step4Label').textContent =
+      cat ? '4. About your cat' : '4. % of apartment your pet dominates';
+    document.getElementById('verdict').hidden = cat;
+    document.getElementById('leaseStatus').hidden = !cat;
+    document.getElementById('breakdown').hidden = !cat;
+  }
+
+  function fmtPct(p, signed) {
+    const r = Math.round(p * 10) / 10;
+    const s = Number.isInteger(r) ? String(Math.abs(r)) : Math.abs(r).toFixed(1);
+    if (!signed) return s + '%';
+    return (r < 0 ? '−' : '+') + s + '%';
+  }
+
+  function renderCatResults(rent, numCats) {
+    const { lines, total } = catCharges(numCats);
+    const body = document.getElementById('breakdownBody');
+    body.innerHTML = '';
+    lines.forEach(l => {
+      const tr = document.createElement('tr');
+      if (!l.base && l.pct < 0) tr.className = 'credit';
+      const amount = rent * l.pct / 100;
+      tr.innerHTML =
+        `<td>${l.label}<span class="why">${l.why}</span></td>` +
+        `<td class="num">${fmtPct(l.pct, !l.base)}</td>` +
+        `<td class="num">${amount < 0 ? '−' : ''}${fmt(Math.abs(amount))}</td>`;
+      body.appendChild(tr);
+    });
+    const tr = document.createElement('tr');
+    tr.className = 'total';
+    tr.innerHTML =
+      `<td>Total owed</td><td class="num">${fmtPct(total, false)}</td>` +
+      `<td class="num">${fmt(rent * total / 100)}</td>`;
+    body.appendChild(tr);
+
+    const lease = LEASE_TIERS.find(t => total < t.max);
+    document.getElementById('leaseTier').textContent = lease.tier;
+    document.getElementById('leaseNote').textContent = lease.note;
+  }
 
   let selectedPet = PETS[2]; // default: cat
   let currency = 'USD';
@@ -423,6 +726,21 @@
   document.getElementById('dominance').value = selectedPet.dominance;
   document.getElementById('rent').value = 2000;
   document.getElementById('petSuffix').textContent = selectedPet.unit + 's';
+  applyMode();
+
+  document.querySelectorAll('#q-bed button').forEach(b => {
+    b.addEventListener('click', () => {
+      bedAnswer = b.dataset.val;
+      document.querySelectorAll('#q-bed button').forEach(x => x.classList.toggle('active', x === b));
+      if (document.getElementById('results').style.display !== 'none') updateResults();
+    });
+  });
+
+  document.querySelectorAll('#catQuiz input, #fishQuiz input').forEach(el => {
+    el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => {
+      if (document.getElementById('results').style.display !== 'none') updateResults();
+    });
+  });
 
   function selectPet(p, btn) {
     selectedPet = p;
@@ -431,6 +749,7 @@
     document.getElementById('dominance').value = p.dominance;
     document.getElementById('petSuffix').textContent = p.unit + 's';
     document.getElementById('calcBtn').textContent = `Calculate Pet Rent ${p.emoji}`;
+    applyMode();
     if (document.getElementById('results').style.display !== 'none') updateResults();
   }
 
@@ -442,6 +761,7 @@
   }
 
   function updateResults() {
+    if (isCatMode()) syncCatDominance();
     const numPets   = parseFloat(document.getElementById('numPets').value) || 1;
     const aptSize   = parseFloat(document.getElementById('aptSize').value);
     const dominance = parseFloat(document.getElementById('dominance').value);
@@ -449,8 +769,23 @@
 
     if (!aptSize || !dominance || !rent) return;
 
+    document.getElementById('heroLabel').textContent =
+      `per month in pet rent (${numPets} ${selectedPet.unit}${numPets > 1 ? 's' : ''})`;
+
     const pct = Math.min(dominance, 100) / 100;
-    const monthlyPetRent = rent * pct;
+    let monthlyPetRent = rent * pct;
+
+    if (selectedPet.id === 'fish') {
+      // Every day it could survive alone past the first takes 10% off, down to nothing.
+      const days = intVal('q-fishdays', 0);
+      const discount = Math.min(1, Math.max(0, days - 1) * 0.1);
+      monthlyPetRent *= 1 - discount;
+      document.getElementById('fishNoteText').textContent = discount === 0
+        ? `Survives ${days} day${days === 1 ? '' : 's'} without you. No discount: it needs you.`
+        : discount === 1
+          ? `Survives ${days} days without you. Fully self-sufficient, so it owes nothing.`
+          : `Survives ${days} days without you: ${Math.round(discount * 100)}% off.`;
+    }
     const annualCost     = monthlyPetRent * 12;
     const costPerPet     = monthlyPetRent / numPets;
     const petArea        = aptSize * pct;
@@ -459,7 +794,12 @@
     document.getElementById('annualCost').textContent     = fmt(annualCost);
     document.getElementById('costPerPet').textContent     = fmt(costPerPet);
     document.getElementById('petArea').textContent        = Math.round(petArea).toLocaleString();
-    document.getElementById('petShare').textContent       = Math.round(dominance) + '%';
+    document.getElementById('petShare').textContent       = fmtPct(dominance, false);
+
+    if (isCatMode()) {
+      renderCatResults(rent, Math.max(1, intVal('numPets', 1)));
+      return;
+    }
 
     const p = selectedPet;
     const n = numPets;
@@ -469,6 +809,7 @@
   }
 
   function calculate() {
+    if (isCatMode()) syncCatDominance();
     const numPets   = parseFloat(document.getElementById('numPets').value);
     const aptSize   = parseFloat(document.getElementById('aptSize').value);
     const dominance = parseFloat(document.getElementById('dominance').value);
